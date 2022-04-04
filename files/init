@@ -1,0 +1,11 @@
+#!/bin/sh
+echo "vm" > /etc/hostname
+echo "127.0.0.1    localhost vm" > /etc/hosts
+
+useradd -s /bin/bash -d /home/user/ -m -G sudo user
+chown -R user:user /home/user
+
+echo "root:password" | chpasswd
+echo "user:password" | chpasswd
+
+exec /sbin/init
