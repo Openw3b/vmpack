@@ -35,6 +35,12 @@ install_app () {
         qemu-img create -f qcow2 -b $base_img_path/image.qcow2 $base_app_path/image.qcow2
         cp $base_img_path/icon.png $base_app_path/icon.png
         create_shortcut
+          read -n1 -p "Do you want to add to Applications? [y,n]" doit 
+          case $doit in  
+            y|Y) sudo cp ~/Desktop/$app_name.desktop /usr/share/applications ;; 
+            n|N) ;; 
+            *) ;; 
+          esac
     else
         #Add step to try fetching from internet and building
         echo "App image does not exist"
@@ -49,7 +55,7 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Terminal=false
-Exec=vmpack.sh start $app_name
+Exec=vmpack start $app_name
 Name=$app_name
 Icon=$base_app_path/icon.png
 EOT
@@ -105,7 +111,10 @@ uninstall_app () {
   if [[ -f "$base_app_path/image.qcow2" ]]; then
     base_app_path=$base_path/apps/$app_name
     rm ~/Desktop/$app_name.desktop
-    rm -rf $base_app_path    
+    rm -rf $base_app_path
+    if [[ -f /usr/share/applications/$app_name.desktop ]]; then
+      sudo rm /usr/share/applications/$app_name.desktop
+    fi    
   else
     echo "The app is not installed"
   fi
