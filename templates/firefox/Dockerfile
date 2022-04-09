@@ -4,7 +4,7 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y dhcpcd5 util-linux systemd systemd-sysv
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y xorg
 RUN apt-get install -y --no-install-recommends spice-vdagent i3-wm
-RUN apt-get install -y --no-install-recommends xterm sudo
+RUN apt-get install -y --no-install-recommends xterm sudo pulseaudio
 
 RUN systemctl disable gdm
 
