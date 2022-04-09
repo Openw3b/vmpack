@@ -1,0 +1,170 @@
+#! /bin/bash
+
+# Global vars
+base_path=~/.vmpack
+user_name=$USER
+
+# Functions
+get_img () {
+    mkdir -p $base_path/images/apps
+    # Todo
+}
+
+build_img () {
+    build_path=$base_path/templates/$img_name
+    base_img_path=$base_path/images/apps/$img_name
+    mkdir -p $base_path/tmp
+    mkdir -p $base_img_path
+
+    DOCKER_BUILDKIT=1 docker build --output "type=tar,dest=$base_path/tmp/$img_name.tar" $build_path
+    sudo virt-make-fs --format=qcow2 --size=+200M $base_path/tmp/$img_name.tar $base_img_path/image.qcow2 
+    sudo chown $user_name:$user_name $base_img_path/image.qcow2
+    cp $build_path/icon.png $base_img_path/icon.png
+    rm $base_path/tmp/$img_name.tar
+}
+
+install_app () {
+  base_app_path=$base_path/apps/$app_name
+  base_img_path=$base_path/images/apps/$img_name
+  mkdir -p $base_app_path
+
+  if [[ -f "$base_app_path/image.qcow2" ]]; then
+    echo "The app name has already been used"
+  else
+    if [[ -f "$base_img_path/image.qcow2" ]]; then
+        qemu-img create -f qcow2 -b $base_img_path/image.qcow2 $base_app_path/image.qcow2
+        cp $base_img_path/icon.png $base_app_path/icon.png
+        create_shortcut
+    else
+        #Add step to try fetching from internet and building
+        echo "App image does not exist"
+    fi
+  fi
+}
+
+create_shortcut () {
+cat <<EOT >> ~/Desktop/$app_name.desktop
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Exec=vmpack.sh start $app_name
+Name=$app_name
+Icon=$base_app_path/icon.png
+EOT
+gio set ~/Desktop/$app_name.desktop metadata::trusted true
+chmod a+x ~/Desktop/$app_name.desktop
+}
+
+start_qemu_app () {
+  qemu-system-x86_64-spice -machine vmport=off \
+    -enable-kvm -cpu host -m 4096m -smp 8 \
+    -name $app_name \
+    --sandbox on \
+    -kernel $base_path/kernel/default/bzImage \
+    -append "root=/dev/vda rw init=/init" \
+    -drive id=root,file=$base_app_path/image.qcow2,format=qcow2,if=none \
+    -device virtio-rng-pci \
+    -device virtio-blk-pci,drive=root \
+    -nic user,model=virtio \
+    -vga virtio \
+    -soundhw hda \
+    -device virtio-tablet-pci,id=input2,bus=pci.0,addr=0x9 -spice port=0,disable-ticketing,image-compression=off,seamless-migration=on \
+    -spice gl=on,unix,addr=$base_app_path/vm.sock,disable-ticketing  \
+    -device virtio-serial -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
+    -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
+    -monitor unix:$base_app_path/monitor.sock,server,nowait \
+    -device ich9-usb-ehci1,id=usb \
+    -device ich9-usb-uhci1,masterbus=usb.0,firstport=0,multifunction=on \
+    -device ich9-usb-uhci2,masterbus=usb.0,firstport=2 \
+    -device ich9-usb-uhci3,masterbus=usb.0,firstport=4 \
+    -chardev spicevmc,name=usbredir,id=usbredirchardev1 \
+    -device usb-redir,chardev=usbredirchardev1,id=usbredirdev1 \
+    -chardev spicevmc,name=usbredir,id=usbredirchardev2 \
+    -device usb-redir,chardev=usbredirchardev2,id=usbredirdev2 \
+    -chardev spicevmc,name=usbredir,id=usbredirchardev3 \
+    & remote-viewer spice+unix://$base_app_path/vm.sock
+    echo 'system_powerdown' | socat - UNIX-CONNECT:$base_app_path/monitor.sock
+}
+
+start_app () {
+  base_app_path=$base_path/apps/$app_name
+
+  if [[ -f "$base_app_path/image.qcow2" ]]; then
+    base_app_path=$base_path/apps/$app_name
+    start_qemu_app
+  else
+    echo "The app is not installed"
+  fi
+}
+
+uninstall_app () {
+  base_app_path=$base_path/apps/$app_name
+
+  if [[ -f "$base_app_path/image.qcow2" ]]; then
+    base_app_path=$base_path/apps/$app_name
+    rm ~/Desktop/$app_name.desktop
+    rm -rf $base_app_path    
+  else
+    echo "The app is not installed"
+  fi
+}
+
+# Main exec flow
+command=$1
+case $command in
+  install)
+    if [ -z $2 ] || [ -z $3 ]; then
+      echo "Missing arguements"
+    else
+      img_name=$2
+      app_name=$3
+      install_app $img_name $app_name
+    fi
+  ;;
+
+  start)
+    if [ -z $2 ]; then
+      echo "Missing arguements"
+    else
+      app_name=$2
+      start_app
+    fi
+  ;;
+  
+  removeimg)
+    if [ -z $2 ] ; then
+      echo "Missing arguements"
+    else
+      img_name=$2
+      rm -rf $base_path/images/apps/$img_name
+    fi
+  ;;
+
+  buildimg)
+    if [ -z $2 ] ; then
+      echo "Missing arguements"
+    else
+      img_name=$2
+      build_img $img_name
+    fi
+  ;;
+
+  uninstall)
+    if [ -z $2 ] ; then
+      echo "Missing arguements"
+    else
+      app_name=$2
+      uninstall_app
+    fi
+  ;;
+
+  update)
+    git -C $base_path pull
+  ;;
+
+  *)
+    echo "Please provide a valid command"
+    ;;
+esac

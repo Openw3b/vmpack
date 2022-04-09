@@ -1,17 +1,17 @@
 FROM ubuntu
 
 RUN apt-get update && \
-    apt-get install -y dhcpcd5 util-linux systemd systemd-sysv
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y xorg
-RUN apt-get install -y spice-vdagent i3-wm
-RUN apt-get install -y xterm sudo
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y dhcpcd5 util-linux systemd systemd-sysv
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y xorg
+RUN apt-get install -y --no-install-recommends spice-vdagent i3-wm
+RUN apt-get install -y --no-install-recommends xterm sudo
 
 RUN systemctl disable gdm
 
-ARG PACKAGES='firefox mousepad'
-ARG COMMAND=firefox
+ARG PACKAGES='vlc'
+ARG COMMAND=vlc
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y $PACKAGES
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $PACKAGES
 
 COPY files/init /init
 RUN chmod +x /init
@@ -30,7 +30,6 @@ RUN echo 'exec --no-startup-id /opt/app.sh' >> /etc/i3/config
 COPY files/.xinitrc /home/user/.xinitrc
 COPY files/.bash_profile /home/user/.bash_profile
 
-#COPY files/app.service /etc/systemd/system/app.service
-#COPY files/app.service /lib/systemd/system/app.service
-#RUN chmod 644 /etc/systemd/system/app.service
-#RUN systemctl enable app
+#RUN echo 'exec --no-startup-id sudo /harden.sh' >> /etc/i3/config
+#COPY files/harden.sh /harden.sh
+#RUN echo 'user ALL = NOPASSWD: /harden.sh' > /etc/sudoers
