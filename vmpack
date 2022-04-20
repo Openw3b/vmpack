@@ -142,7 +142,7 @@ case $command in
     fi
   ;;
   
-  removeimg)
+  rmi)
     if [ -z $2 ] ; then
       echo "Missing arguements"
     else
@@ -151,7 +151,7 @@ case $command in
     fi
   ;;
 
-  buildimg)
+  build)
     if [ -z $2 ] ; then
       echo "Missing arguements"
     else
