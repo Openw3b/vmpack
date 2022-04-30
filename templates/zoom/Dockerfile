@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:focal
 
 RUN apt-get update && \
     apt-get install -y dhcpcd5 util-linux systemd systemd-sysv

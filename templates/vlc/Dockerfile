@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:focal
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y dhcpcd5 util-linux systemd systemd-sysv

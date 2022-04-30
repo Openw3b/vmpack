@@ -195,6 +195,6 @@ bindsym Mod1+r mode "resize"
 for_window [class="^.*"] border pixel 0
 
 # Start spice agent
-exec --no-startup-id spice-vdagent
+exec --no-startup-id spice-vdagent -f /home/user/.share
 exec --no-startup-id /opt/xrandrloop.sh
 
