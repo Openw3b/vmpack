@@ -1,8 +1,10 @@
 # VMPack
 
-Run GUI linux applications in QEMU VMs for security via isolation. This project is still in experimental stages, for example clipboard isolation isn't a feature yet, so please keep in mind the limitations.
+Run GUI linux applications in QEMU VMs for security via isolation.
 
 ![vmpack screenshot 1](./docs/screenshots/full.png)
+
+Disclaimer: This project is still in experimental stages, for example clipboard isolation isn't a feature yet, so please keep in mind the limitations.
 
 ## Why?
 
