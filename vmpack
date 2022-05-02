@@ -68,7 +68,7 @@ chmod a+x ~/Desktop/$app_name.desktop
 
 start_qemu_app () {
   qemu-system-x86_64-spice -machine vmport=off \
-    -enable-kvm -cpu host -m 4096m -smp 8 \
+    -enable-kvm -cpu host -m 4096m -smp 16 \
     -name $app_name \
     --sandbox on \
     -kernel $base_path/kernel/default/bzImage \

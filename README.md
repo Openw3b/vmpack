@@ -2,10 +2,19 @@
 
 Run GUI linux applications in QEMU VMs. (Experimental crosvm support being added)
 
-Prerequisites:
-1. Install Docker and add user to docker group via `sudo gpasswd -a $USER docker`
-2. Install dependencies `sudo apt install git docker libguestfs-tools socat virt-manager`
+## Prerequisites:
+1. Ubuntu based distro (for now)
+1. Docker installed and user added to docker group via `sudo gpasswd -a $USER docker`
+2. Other dependencies installed `sudo apt install git libguestfs-tools socat virt-manager`
 3. Reboot your system or reload your session
+
+## Features
+
+- GPU Acceleration via virtio-gpu with gl=on
+- Drag and drop
+- Window Resize
+- Clipboard (need to limit permission)
+- Sound and microphone (need to limit permission)
 
 To get started,
 
@@ -31,5 +40,8 @@ vmpack install firefox Firefox1
 vmpack start Firefox1
 ```
 
-You should see Firefox1 loaded
+You should see Firefox1 loaded.
 
+
+
+## 
