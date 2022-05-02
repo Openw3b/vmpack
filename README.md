@@ -18,13 +18,13 @@ Run GUI linux applications in QEMU VMs for security via isolation. This project 
 - Sound and microphone (need to limit permission)
 - Simple codebase. Just bash scripts and Dockerfiles (for now)
 
-## Prerequisites:
+## Prerequisites
 - Ubuntu based distro (for now)
 - Docker installed and user added to docker group via `sudo gpasswd -a $USER docker`. Used for building images
 - Other dependencies installed `sudo apt install git libguestfs-tools socat virt-manager`
 - Reboot your system or reload your session
 
-## Get started,
+## Get started
 
 1. Install vmpack
 ```
