@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "vm" > /etc/hostname
+echo "127.0.0.1    localhost vm" > /etc/hosts
+
+# Set password for user
+#echo "user:password" | chpasswd
+
+exec /sbin/init
