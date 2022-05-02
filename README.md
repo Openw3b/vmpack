@@ -2,6 +2,8 @@
 
 Run GUI linux applications in QEMU VMs for security via isolation. This project is still in experimental stages, for example clipboard isolation isn't a feature yet, so please keep in mind the limitations.
 
+![vmpack screenshot 1](./docs/screenshots/full.png)
+
 ## Why?
 
 - Security via isolation to protect against malicious/exploitable applications

@@ -94,7 +94,7 @@ start_qemu_app () {
     -device usb-redir,chardev=usbredirchardev2,id=usbredirdev2 \
     -chardev spicevmc,name=usbredir,id=usbredirchardev3 \
     -device virtio-serial-pci,id=virtio-serial0 -device virtserialport,bus=virtio-serial0.0,nr=1,chardev=charchannel1,id=channel1,name=org.spice-space.webdav.0 -chardev spiceport,name=org.spice-space.webdav.0,id=charchannel1 \
-    & remote-viewer spice+unix://$base_app_path/vm.sock
+    & remote-viewer --title=$app_name spice+unix://$base_app_path/vm.sock
     echo 'system_powerdown' | socat - UNIX-CONNECT:$base_app_path/monitor.sock
 }
 
