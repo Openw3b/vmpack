@@ -16,8 +16,9 @@ build_img () {
     mkdir -p $base_path/tmp
     mkdir -p $base_img_path
 
+    docker build -t base-ubuntu $base_path/templates/base-ubuntu
     DOCKER_BUILDKIT=1 docker build --output "type=tar,dest=$base_path/tmp/$img_name.tar" $build_path
-    sudo virt-make-fs --format=qcow2 --size=+200M $base_path/tmp/$img_name.tar $base_img_path/image.qcow2 
+    sudo virt-make-fs --format=qcow2 --size=+500M $base_path/tmp/$img_name.tar $base_img_path/image.qcow2 
     sudo chown $user_name:$user_name $base_img_path/image.qcow2
     cp $build_path/icon.png $base_img_path/icon.png
     rm $base_path/tmp/$img_name.tar
@@ -32,10 +33,11 @@ install_app () {
     echo "The app name has already been used"
   else
     if [[ -f "$base_img_path/image.qcow2" ]]; then
-        qemu-img create -f qcow2 -b $base_img_path/image.qcow2 $base_app_path/image.qcow2
+        qemu-img create -q -f qcow2 -b $base_img_path/image.qcow2 $base_app_path/image.qcow2
         cp $base_img_path/icon.png $base_app_path/icon.png
         create_shortcut
-          read -n1 -p "Do you want to add to Applications? [y,n] " doit 
+          echo "App installed!"
+          read -n1 -p "Do you want to add to Applications menu? [y,n] " doit 
           case $doit in  
             y|Y) sudo cp ~/Desktop/$app_name.desktop /usr/share/applications ;; 
             n|N) ;; 
