@@ -2,11 +2,14 @@
 
 Run GUI linux applications in QEMU VMs. (Experimental crosvm support being added)
 
+## Why?
+- Security via isolation
+
 ## Prerequisites:
-1. Ubuntu based distro (for now)
-1. Docker installed and user added to docker group via `sudo gpasswd -a $USER docker`
-2. Other dependencies installed `sudo apt install git libguestfs-tools socat virt-manager`
-3. Reboot your system or reload your session
+- Ubuntu based distro (for now)
+- Docker installed and user added to docker group via `sudo gpasswd -a $USER docker`
+- Other dependencies installed `sudo apt install git libguestfs-tools socat virt-manager`
+- Reboot your system or reload your session
 
 ## Features
 
