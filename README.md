@@ -19,6 +19,7 @@ Disclaimer: This project is still in experimental stages, for example clipboard 
 - Clipboard (need to limit permission)
 - Sound and microphone (need to limit permission)
 - Simple codebase. Just bash scripts and Dockerfiles (for now)
+- USB Devices like Webcam
 
 ## Prerequisites
 - Ubuntu based distro (for now)
