@@ -13,6 +13,7 @@ Disclaimer: This project is still in experimental stages, for example clipboard 
 
 ## Features
 
+- Multiple isolated instances of any app(s)
 - GPU Acceleration via virtio-gpu with gl=on
 - Drag and drop
 - Window Resize
