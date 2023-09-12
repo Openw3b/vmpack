@@ -23,9 +23,10 @@ Disclaimer: This project is still in experimental stages, for example clipboard 
 - USB Devices like Webcam
 
 ## Prerequisites
-- Ubuntu based distro (for now)
+- Tested with Ubuntu and Arch based distros
 - Docker installed and user added to docker group via `sudo gpasswd -a $USER docker`. Used for building images
-- Other dependencies installed `sudo apt install git libguestfs-tools socat virt-manager`
+- Dependencies for Ubuntu-based distros `sudo apt install git libguestfs-tools socat virt-manager`
+- Dependencies for Arch-based distros `sudo pacman -S git guestfs-tools socat virt-manager qemu-full`
 - Reboot your system or reload your session
 
 ## Get started
