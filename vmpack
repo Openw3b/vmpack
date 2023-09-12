@@ -33,7 +33,7 @@ install_app () {
     echo "The app name has already been used"
   else
     if [[ -f "$base_img_path/image.qcow2" ]]; then
-        qemu-img create -q -f qcow2 -b $base_img_path/image.qcow2 $base_app_path/image.qcow2
+        qemu-img create -q -f qcow2 -F qcow2 -b $base_img_path/image.qcow2 $base_app_path/image.qcow2
         cp $base_img_path/icon.png $base_app_path/icon.png
         create_shortcut
           echo "App installed!"
@@ -67,7 +67,7 @@ chmod a+x ~/Desktop/$app_name.desktop
 }
 
 start_qemu_app () {
-  qemu-system-x86_64-spice -machine vmport=off \
+  qemu-system-x86_64 -machine vmport=off \
     -enable-kvm -cpu host -m 4096m -smp 16 \
     -name $app_name \
     --sandbox on \
@@ -78,7 +78,6 @@ start_qemu_app () {
     -device virtio-blk-pci,drive=root \
     -nic user,model=virtio \
     -vga virtio \
-    -soundhw hda \
     -device virtio-tablet-pci,id=input2,bus=pci.0,addr=0x9 -spice port=0,disable-ticketing,image-compression=off,seamless-migration=on \
     -spice gl=on,unix,addr=$base_app_path/vm.sock,disable-ticketing  \
     -device virtio-serial -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
